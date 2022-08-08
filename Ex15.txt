@@ -1,0 +1,97 @@
+ !PROGRAMA QUE  RESOLVE UMA EQ-DIF-PARCIAL
+
+ ! O PROGRAMA USARÁ DIFERENÇA FINITAS
+
+ ! Exercício 15 do cap. 12 do livro do Burden
+     
+      PROGRAM teste equdif
+      IMPLICIT real (a-h,o-z)
+
+	 real hx,ky,lambda,ll,u,tt,x, F
+	
+       parameter(xl=2)   ! comprimento máximo
+	 parameter (T=0.1)  ! tempo máximo
+	 parameter(alfa=1) ! a constante da equ. dif
+	 parameter(mx=3) !m do metodo
+	 parameter(Nt=1)  ! n do método
+
+
+
+
+       dimension w(mx), ll(mx),u(mx),z(mx), F(mx)
+
+	! algortimo 12.3 burden
+	! passo 1
+	hx=xl/mx
+	ky=T/Nt
+	lambda=((alfa**2)*ky)/(hx**2)
+	 
+	 w(mx)=0.0
+
+	 do i=1,mx-1,1
+		  
+
+	     w(i)=SIN((3.14/2)*i*hx)   ! passo 2
+
+	      
+	 enddo
+
+	 ll(1)=1+lambda
+	 u(1)=(-lambda)/(2*ll(1))	  ! passo 3
+	  
+
+	  
+	    do i=2,mx-2,1
+	    
+	       ll(i)=1+lambda+(lambda*u(i-1)/2)
+	       									! passo 4
+		   u(i)= -lambda/(2*ll(i))
+
+	    enddo
+
+        ll(mx-1)=1+lambda+(lambda*u(mx-2)/2) !passo 5 algoritmo pag 735 burden
+
+	
+
+	    
+	    do j=1,Nt	   !passo 6
+	          
+			   tt=j*ky
+	     
+	z(1)=(((1-lambda)*w(1))+((lambda/2)*w(2))+ky*F(i*hx))/(ll(1))	 
+	 !passo 7
+
+	          do i=2,mx-1
+
+      z(i)=(((1-lambda)*w(i))+(lambda/2)*(w(i+1)+w(i-1)+z(i-1))+
+     * ky*F(i*hx))/(ll(i))
+	!passo 8
+
+	          enddo
+	     
+	      w(mx-1)=z(mx-1)	 !passo 9
+
+
+	          do i=mx-2,1,-1
+
+	           w(i)=z(i)-(u(i)*w(i+1))	 !passo 10
+
+                enddo
+
+	          
+
+	         do i=1,mx-1
+
+	           x=i*hx
+
+	             write(*,*) x, w(i)		 !passo 11
+	          
+			 enddo
+
+	    enddo !j
+
+
+
+
+
+	END PROGRAM !equação diferencial
